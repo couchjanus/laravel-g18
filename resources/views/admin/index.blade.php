@@ -1,5 +1,6 @@
-{{ $title }}
+@extends('layouts.admin')
+@section('content')
 
-<ul>
-<li><a href="/admin/categories">Categories</a></li>
-</ul>
+    {{ $title }}
+
+@endsection

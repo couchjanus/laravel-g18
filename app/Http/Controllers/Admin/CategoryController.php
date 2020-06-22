@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DB;
-use Carbon\Carbon;
 
 class CategoryController extends Controller
 {
@@ -16,8 +15,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = DB::select('select * from categories');
-        return view('admin.categories.index', compact('categories'));
+        //
     }
 
     /**
@@ -27,7 +25,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        //
     }
 
     /**
@@ -38,70 +36,51 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        DB::insert('insert into categories (name, description, created_at) value(?, ?, ?)', 
-            [
-                $request['name'], 
-                $request['description'],
-                Carbon::now('Europe/Kiev')
-            ]
-        );
-        return redirect(route('admin.categories.index'));
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        $category = DB::select('select * from categories where id=?', [$id])[0];
-        // dd($category);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        // $category = DB::select('select * from categories where id=?', [$id]);
-        $category = DB::select('select * from categories where id=?', [$id])[0];
-        // dd($category);
-        return view('admin.categories.edit', compact('category'));
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        DB::update('update categories set name=?, description=?, updated_at=?
-         where id = ?', [
-            $request['name'], 
-            $request['description'], 
-            Carbon::now('Europe/Kiev'),
-            $id
-        ]);
-        return redirect(route('admin.categories.index'));
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        DB::delete('delete from categories where id=?', [$id]);
-        return redirect(route('admin.categories.index'));
+        //
     }
 }

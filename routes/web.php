@@ -21,9 +21,13 @@ Route::namespace('Admin')
     ->prefix('admin')
     ->as('admin.')
 	->group(function () {
-        Route::get('/', 'DashboardController'); 	 
+        Route::get('/', 'DashboardController')->name('home');
         Route::resource('users', 'UserController');
         Route::resource('categories', 'CategoryController');
+        Route::get('posts/trashed', 'PostController@trashed')->name('posts.trashed');
+        Route::post('posts/restore/{id}', 'PostController@restore')->name('posts.restore');
+        Route::delete('posts/force/{id}', 'PostController@force')->name('posts.force');
+        Route::resource('posts', 'PostController');
 });
 
 Route::group(['as' => 'blog.', 'prefix' => 'blog'], function () {
@@ -41,4 +45,3 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::fallback(function() {
     return "Oops… How you've trapped here?";
 });
-
