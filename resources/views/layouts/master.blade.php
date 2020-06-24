@@ -16,6 +16,6 @@
        @yield('page')
        
     </div>
-    @yield('scripts')
+    @yield('allscripts')
 </body>
 </html>

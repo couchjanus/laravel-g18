@@ -1,4 +1,4 @@
-<footer class="mt-3 px-4 bg-info shadow-sm">
+<footer class="mt-3 px-4 shadow-sm">
     <div class="row">
         <div class="col-md-4">
             <div class="widget">

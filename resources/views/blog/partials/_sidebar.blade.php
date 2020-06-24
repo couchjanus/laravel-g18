@@ -1,4 +1,4 @@
-<div class="p-4">
+<div class="p-4 left-sidebar">
     <div class="widget">
         <form>
             <div class="input-append">
@@ -9,10 +9,10 @@
     </div>
 
     <div class="widget">
-        <h5>Categories</h5>
-          <ul>
+        <h5 class="widgetheading">Categories</h5>
+          <ul class="cat">
             @foreach ($categories as $category)
-                <li><a href="/blog/category/{{ $category->id }}">{{ $category->name }}</a></li>
+                <li><i class="icon-angle-right"></i> <a href="/blog/category/{{ $category->id }}">{{ $category->name }}</a></li>
             @endforeach
           </ul>
     </div>

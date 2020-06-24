@@ -15,9 +15,9 @@
     </div>
     <div class="meta-post">
         <ul>
-            <li>By <a href="/blog/author/{{ $post->user_id }}" class="author">{{ $post->username }}</a></li>
+            <li>By <a href="/blog/author/{{ $post->user->id }}" class="author">{{ $post->user->name }}</a></li>
             <li>On <a href="#" class="date">{{  \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</a></li>
-            <li>Category: <a href="/blog/category/{{ $post->category_id }}">{{ $post->name }}</a></li>
+            <li>Category: <a href="/blog/category/{{ $post->category->id }}">{{ $post->category->name }}</a></li>
         </ul>
     </div>
     <div class="post-entry">

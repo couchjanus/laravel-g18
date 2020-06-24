@@ -41,6 +41,17 @@
                 <span class="help-block">{{ __('Category Field Required') }}</span>
             </div>
             <div class="form-group">
+                <label for="tag" class= 'control-label'>Select tags</label>
+                <select name="tags[]" class="form-control select2" multiple='multiple' id='tag'>
+                    @foreach($tags as $key => $value)
+                        <option value="{{ $key }}"
+                            {{ ($post->tags->pluck('id')->contains($key)) ? 'selected':'' }}  />
+                            {{ $value }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ __('Update') }}
                 </button>
@@ -49,3 +60,14 @@
     </div>
 </div>
 @endsection
+
+
+@push('scripts')
+<script src="{{ asset('js/select2.min.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.select2').select2();
+    });
+</script>
+@endpush

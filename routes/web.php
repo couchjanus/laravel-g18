@@ -28,6 +28,7 @@ Route::namespace('Admin')
         Route::post('posts/restore/{id}', 'PostController@restore')->name('posts.restore');
         Route::delete('posts/force/{id}', 'PostController@force')->name('posts.force');
         Route::resource('posts', 'PostController');
+        Route::resource('tags', 'TagController');
 });
 
 Route::group(['as' => 'blog.', 'prefix' => 'blog'], function () {
@@ -36,6 +37,24 @@ Route::group(['as' => 'blog.', 'prefix' => 'blog'], function () {
     Route::get('author/{id}', 'BlogController@getByAuthor');
     Route::get('show/{id}', 'BlogController@show');
 });
+
+Route::get('posts-by-status', function () {
+    $user = \App\User::find(1);
+    $posts = $user->posts()->get();
+    $posts = $user->posts->where('published', 1)->all();
+    foreach ($posts as $post) {
+        dump($post);
+    }
+});
+
+Route::get('/get-by-user', function () {
+    $posts = App\Post::where('published', 1)
+    ->with('user')
+    ->get();
+    dump($posts);
+});
+ 
+  
  
 // Еще какие-то маршруты....
 Auth::routes();

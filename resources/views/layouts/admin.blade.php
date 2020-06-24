@@ -4,7 +4,8 @@
 @endsection
 @section('styles')
     <!-- Include Styles -->
-    @include('layouts.partials.admin._styles')    
+    @include('layouts.partials.admin._styles')
+    <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet"> 
 @endsection
 
 @section('page')
@@ -22,7 +23,8 @@
 </div>    
 @endsection
 
-@section('scripts')
-    <!-- Include Scripts -->
-    @include('layouts.partials.admin._scripts')
+@section('allscripts')
+  @include('layouts.partials.admin._scripts')
+  @stack('scripts')
 @endsection
+

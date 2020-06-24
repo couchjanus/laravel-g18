@@ -18,6 +18,14 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ route("admin.tags.index") }}" class="nav-link {{ request()->is('admin/tags') || request()->is('admin/tags/*') ? 'active' : '' }}">
+                    <i class="fa-fw fas fa-file nav-icon">
+
+                    </i>
+                    {{ __('Tags') }}
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ route("admin.posts.index") }}" class="nav-link {{ request()->is('admin/posts') || request()->is('admin/posts/*') ? 'active' : '' }}">
                     <i class="fa-fw fas fa-briefcase nav-icon">
 

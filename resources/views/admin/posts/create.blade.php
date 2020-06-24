@@ -38,6 +38,16 @@
                 </select>
                 <span class="help-block">{{ __('Category Field Required') }}</span>
             </div>
+
+            <div class="form-group">
+                <label for="tag">{{ __('Tags') }}</label>
+                <select class="form-control select2"  multiple='multiple' id="tag" name="tags[]">
+                    @foreach($tags as $key => $value)
+                        <option value="{{ $key }}">{{$value}}</option>
+                    @endforeach
+                </select>
+                <span class="help-block">{{ __('Fields Tags Rewuired') }}</span>
+            </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ __('Save') }}
@@ -48,3 +58,13 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/select2.min.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.select2').select2();
+    });
+</script>
+@endpush

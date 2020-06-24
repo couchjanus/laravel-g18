@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\{Post, Category};
+use App\{Post, Category, Tag};
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -15,9 +15,6 @@ class PostController extends Controller
      */
     public function index()
     {
-        // $posts = Post::all();
-        // $posts = Post::paginate();
-        // $posts = Post::paginate(10);
         $posts = Post::latest()->paginate(5);
         return view('admin.posts.index', compact('posts'));
     }
@@ -30,7 +27,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all()->pluck('name', 'id');
-        return view('admin.posts.create', compact('categories'));
+        $tags = Tag::all()->pluck('name', 'id');
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -42,6 +40,8 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $post = Post::create(['title'=>$request->title, 'content'=>$request->content, 'category_id'=>$request->category_id, 'user_id'=>1]);
+        $post->tags()->sync($request->input('tags', []));
+
         return redirect()->route('admin.posts.index');
     }
 
@@ -65,7 +65,9 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all()->pluck('name', 'id');
-        return view('admin.posts.edit')->withCategories($categories)->withPost($post);
+        $post->load('tags');
+        $tags = Tag::all()->pluck('name', 'id');
+        return view('admin.posts.edit')->withCategories($categories)->withTags($tags)->withPost($post);
     }
 
     /**
@@ -83,7 +85,7 @@ class PostController extends Controller
             'category_id'=>$request->category_id,
             'published'=>($request->published =='on')?1:0,
             ]);
-        
+        $post->tags()->sync($request->input('tags', []));
         return redirect()->route('admin.posts.index');
     }
 
@@ -95,6 +97,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $post->tags()->detach();
         $post->delete();
         return redirect()->route('admin.posts.index');
     }
