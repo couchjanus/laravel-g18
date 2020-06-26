@@ -22,6 +22,7 @@ Route::namespace('Admin')
     ->as('admin.')
 	->group(function () {
         Route::get('/', 'DashboardController')->name('home');
+        Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
         Route::resource('users', 'UserController');
         Route::resource('categories', 'CategoryController');
         Route::get('posts/trashed', 'PostController@trashed')->name('posts.trashed');
@@ -38,28 +39,26 @@ Route::group(['as' => 'blog.', 'prefix' => 'blog'], function () {
     Route::get('show/{id}', 'BlogController@show');
 });
 
-Route::get('posts-by-status', function () {
-    $user = \App\User::find(1);
-    $posts = $user->posts()->get();
-    $posts = $user->posts->where('published', 1)->all();
-    foreach ($posts as $post) {
-        dump($post);
-    }
+Route::middleware('auth')
+   ->prefix('profile')->as('profile.')
+   ->group(function () {
+       Route::get('', 'ProfileController@index')
+           ->name('home');
+       Route::get('info', 'ProfileController@show')
+           ->name('info');
+       Route::put('store', 'ProfileController@store')
+           ->name('store');
 });
-
-Route::get('/get-by-user', function () {
-    $posts = App\Post::where('published', 1)
-    ->with('user')
-    ->get();
-    dump($posts);
-});
- 
   
  
 // Еще какие-то маршруты....
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/home', function () {
+    return redirect('profile');
+});
 
 Route::fallback(function() {
     return "Oops… How you've trapped here?";

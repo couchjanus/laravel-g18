@@ -5,7 +5,6 @@
 @section('styles')
     <!-- Include Styles -->
     @include('layouts.partials.admin._styles')
-    <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet"> 
 @endsection
 
 @section('page')
@@ -16,7 +15,8 @@
       @include('layouts.partials.admin._sidebar')
       <main class="main">
         <div style="padding-top: 20px" class="container-fluid">
-            @yield('content')
+          @include('layouts.partials.admin._flash-message')
+          @yield('content')
         </div>
       </main>
     </div>

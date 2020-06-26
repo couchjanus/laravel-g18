@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\User;
+use App\{User, Profile};
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -15,7 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::paginate(7);
+
+        return view('admin.users.index', compact('users'));
     }
 
     /**
@@ -25,7 +27,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.users.create');
     }
 
     /**
@@ -36,7 +38,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = User::create($request->all());
+
+        $profile = new Profile();
+        $user->profile()->save($profile);
+
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -47,7 +54,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return view('admin.users.show', compact('user'));
     }
 
     /**
@@ -58,7 +65,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return view('admin.users.edit', compact('user'));
     }
 
     /**
@@ -70,7 +77,12 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $user->update($request->all());
+        if (!$user->profile) {
+            $profile = new Profile();
+            $user->profile()->save($profile);
+        }
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -81,6 +93,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return back()->withSuccess('User deleted successfully');
+    }
+
+    public function massDestroy(Request $request)
+    {
+        User::whereIn('id', request('ids'))->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

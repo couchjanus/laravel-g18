@@ -23,7 +23,7 @@
     @include('layouts.partials.front._footer')
 @endsection
 
-@section('scripts')
+@section('allscripts')
     <!-- Include Scripts -->
     @include('layouts.partials.shared._scripts')
 @endsection
