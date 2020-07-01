@@ -30,6 +30,9 @@ Route::namespace('Admin')
         Route::delete('posts/force/{id}', 'PostController@force')->name('posts.force');
         Route::resource('posts', 'PostController');
         Route::resource('tags', 'TagController');
+        Route::get('invitations', 'InvitationController@index')->name('showInvitations');
+        Route::post('invite/{id}', 'InvitationController@sendInvite')
+        ->name('send.invite');
 });
 
 Route::group(['as' => 'blog.', 'prefix' => 'blog'], function () {
@@ -40,6 +43,7 @@ Route::group(['as' => 'blog.', 'prefix' => 'blog'], function () {
 });
 
 Route::middleware('auth')
+    // ->middleware('verified')
    ->prefix('profile')->as('profile.')
    ->group(function () {
        Route::get('', 'ProfileController@index')
@@ -53,13 +57,42 @@ Route::middleware('auth')
  
 // Еще какие-то маршруты....
 Auth::routes();
-
-// Route::get('/home', 'HomeController@index')->name('home');
+// Auth::routes(['verify' => true]);
 
 Route::get('/home', function () {
     return redirect('profile');
 });
 
+// Mailable
+
+Route::get('reminder', function () {
+    // return new \App\Mail\Reminder();
+    return new \App\Mail\Reminder('Blahuoooo!');
+});
+
+// Route::post('rem', function (\Illuminate\Http\Request $request) {
+//     dd($request);
+// })->name('reminder');
+
+Route::post('rem', function (
+    \Illuminate\Http\Request $request, 
+    \Illuminate\Mail\Mailer $mailer) {
+        $mailer->to($request->email)
+        ->send(new \App\Mail\Reminder($request->event));
+        return redirect()->back();    
+    }
+)->name('reminder');
+
+Route::get('invite', function () {
+    // return (new App\Mail\Invitation())->render();
+    $url = 'http://my.cat'; // Your Invite Link
+    return (new App\Mail\Invitation($url))->render();
+});
+
+Route::get('register/request', 'Auth\RegisterController@requestInvitation')->name('requestInvitation');
+Route::post('invitations', 'InvitationController@store')->middleware('guest')->name('storeInvitation');
+
+// 
 Route::fallback(function() {
     return "Oops… How you've trapped here?";
 });

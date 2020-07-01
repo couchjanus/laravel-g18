@@ -15,6 +15,8 @@ class ProfileController extends Controller
 
     public function __construct(ProfileService $service)
     {
+        $this->middleware('verified');
+     	$this->middleware('auth');
         $this->service = $service;
     }
     /**
