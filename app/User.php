@@ -20,7 +20,7 @@ class User extends Authenticatable //  implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'email_verified_at'
     ];
 
     /**
@@ -75,5 +75,9 @@ class User extends Authenticatable //  implements MustVerifyEmail
     {
         return $this->hasMany(Post::class);
     }
-        
+
+    public function accounts(){
+        return $this->hasMany(Social::class);
+    }
+    
 }

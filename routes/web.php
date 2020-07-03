@@ -53,44 +53,22 @@ Route::middleware('auth')
        Route::put('store', 'ProfileController@store')
            ->name('store');
 });
-  
  
 // Еще какие-то маршруты....
-Auth::routes();
-// Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true]);
 
 Route::get('/home', function () {
     return redirect('profile');
 });
 
 // Mailable
-
-Route::get('reminder', function () {
-    // return new \App\Mail\Reminder();
-    return new \App\Mail\Reminder('Blahuoooo!');
-});
-
-// Route::post('rem', function (\Illuminate\Http\Request $request) {
-//     dd($request);
-// })->name('reminder');
-
-Route::post('rem', function (
-    \Illuminate\Http\Request $request, 
-    \Illuminate\Mail\Mailer $mailer) {
-        $mailer->to($request->email)
-        ->send(new \App\Mail\Reminder($request->event));
-        return redirect()->back();    
-    }
-)->name('reminder');
-
-Route::get('invite', function () {
-    // return (new App\Mail\Invitation())->render();
-    $url = 'http://my.cat'; // Your Invite Link
-    return (new App\Mail\Invitation($url))->render();
-});
-
 Route::get('register/request', 'Auth\RegisterController@requestInvitation')->name('requestInvitation');
 Route::post('invitations', 'InvitationController@store')->middleware('guest')->name('storeInvitation');
+
+// Socialite Register Routes
+
+Route::get('social/{provider}', 'Auth\SocialController@redirect')->name('social.redirect');
+Route::get('social/{provider}/callback', 'Auth\SocialController@callback')->name('social.callback');
 
 // 
 Route::fallback(function() {

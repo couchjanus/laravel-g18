@@ -26,7 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.categories.create');
     }
 
     /**
@@ -37,7 +37,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|unique:categories|max:255',
+            'description' => 'nullable|string',
+        ]);
+        Category::create(['name'=>$request->name]);
+        return redirect()->route('admin.categories.index');
     }
 
     /**
@@ -59,7 +64,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -71,7 +76,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        Category::create(['name'=>$request->name]);
+        return redirect()->route('admin.categories.index');
     }
 
     /**

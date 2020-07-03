@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\{User, Profile};
 use Illuminate\Http\Request;
+use App\Http\Requests\{StoreUserRequest, UpdateUserRequest};
 
 class UserController extends Controller
 {
@@ -36,14 +37,12 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
         $user = User::create($request->all());
-
         $profile = new Profile();
         $user->profile()->save($profile);
-
-        return redirect()->route('admin.users.index');
+        return redirect()->route('admin.users.index')->withSuccess('User created successfully');
     }
 
     /**
@@ -75,7 +74,7 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         $user->update($request->all());
         if (!$user->profile) {

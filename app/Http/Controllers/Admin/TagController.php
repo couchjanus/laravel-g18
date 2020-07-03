@@ -37,6 +37,26 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
+        // правила проверки могут быть указаны
+        // строкой с разделителями: | 
+        $request->validate([
+            'name' => 'required|unique:tags|max:25',
+        ]);
+        // В качестве альтернативы, правила проверки 
+        // могут быть указаны как массивы правил: 
+        // $request->validate([
+        //     'name' => ['required', 'unique:tags', 'max:25'],
+        // ]);
+
+        // можно использовать метод validateWithBag для проверки запроса и 
+        // сохранения любых сообщений об ошибках в именованном кейсе ошибок:
+        // $validator=$request->validateWithBag('tag', [
+        //     'name' => ['required', 'unique:tags', 'max:25'],
+        // ]);
+        // что позволит получать сообщения об ошибках, передав имя в качестве второго аргумента withErrors:
+        // return redirect()->route('admin.tags.index')->withErrors($validator, 'tag');
+        // Затем вы можете получить доступ к именованному экземпляру MessageBag из переменной $errors:{{ $errors->tag->first('name') }}
+
         Tag::create(['name'=>$request->name]);
         return redirect()->route('admin.tags.index');
     }

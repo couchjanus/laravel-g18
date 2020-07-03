@@ -1,13 +1,31 @@
-<h1>Add New Category</h1>
-<form method="POST" action="/admin/categories">
-  <input type='hidden' name="_token" value="{{ csrf_token() }}">
-  <div class="form-group">
-    <label for="name">Name:</label>
-    <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
-  </div>
-  <div class="form-group">
-    <label for="description">Description:</label>
-    <input id="description" type="text" class="form-control" name="description"> 
-  </div>
-  <button type="submit" class="btn btn-primary">Save</button>
-</form>
+@extends('layouts.admin')
+@section('content')
+
+<div class="card">
+    <div class="card-header">
+        {{ __('Create category') }}
+    </div>
+
+    <div class="card-body">
+        <form method="POST" action="{{ route("admin.categories.store") }}" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label class="required" for="name">{{ __('category Name') }}</label>
+                <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="name" id="name" value="{{ old('name', '') }}" required>
+                @if($errors->has('name'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('name') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ __('Name Field Required') }}</span>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-danger" type="submit">
+                    {{ __('Save') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@endsection
