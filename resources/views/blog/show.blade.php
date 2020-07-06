@@ -18,6 +18,7 @@
             <li>By <a href="/blog/author/{{ $post->user->id }}" class="author">{{ $post->user->name }}</a></li>
             <li>On <a href="#" class="date">{{  \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</a></li>
             <li>Category: <a href="/blog/category/{{ $post->category->id }}">{{ $post->category->name }}</a></li>
+            <li>Views: <a href="#" class="votes"> {{ $post->votes }}</a></li>
         </ul>
     </div>
     <div class="post-entry">

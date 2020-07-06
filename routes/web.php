@@ -35,11 +35,13 @@ Route::namespace('Admin')
         ->name('send.invite');
 });
 
+Route::get('about', 'AboutController@index')->name('about');
+
 Route::group(['as' => 'blog.', 'prefix' => 'blog'], function () {
     Route::get('', 'BlogController@index')->name('index');
     Route::get('category/{id}', 'BlogController@getByCategory');
     Route::get('author/{id}', 'BlogController@getByAuthor');
-    Route::get('show/{id}', 'BlogController@show');
+    Route::get('show/{slug}', 'BlogController@show')->name('show');
 });
 
 Route::middleware('auth')

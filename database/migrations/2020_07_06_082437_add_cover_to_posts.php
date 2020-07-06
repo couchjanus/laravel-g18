@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSoftdeletToUsers extends Migration
+class AddCoverToPosts extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddSoftdeletToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::table('posts', function (Blueprint $table) {
+            $table->string("cover_path")->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddSoftdeletToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropColumn(['cover_path']);
         });
     }
 }

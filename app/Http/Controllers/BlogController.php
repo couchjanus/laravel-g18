@@ -20,15 +20,24 @@ class BlogController extends Controller
         return view('blog.index', compact('posts', 'categories'));
     }
      
-    public function show($id)
+    public function show($slug)
     {
-        $post = Post::where('id', $id)
-        ->with('user')
-        ->with('category')
-        ->first();
+        if (is_numeric($slug)) {
+            $post = Post::findOrFail($slug);
+            return redirect(route('blog.show', $post->slug), 301);
+        }
+
+        $post = Post::whereSlug($slug)->with('user')->with('category')->firstOrFail();
         $hasComments = false;
-        $categories = DB::table('categories')->take(30)->get();
-        return view('blog.show', compact('post', 'categories', 'hasComments'));
+        $categories = DB::table('categories')->get();
+
+        $Key = 'blog' . $post->id;
+        if (!\Session::has($Key)) {
+            $post->increment('votes');
+            \Session::put($Key, 1);
+        }
+        
+        return view('blog.show',compact('post', 'categories', 'hasComments'));
     }
 
     public function getByCategory($id)

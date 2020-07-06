@@ -15,12 +15,13 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('title');  // VARCHAR equivalent with a length
-            $table->boolean('published')->default(true);   // BOOLEAN equivalent to the table
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->boolean('published')->default(true);
             $table->unsignedBigInteger('votes')->default(0); 
             $table->unsignedBigInteger('category_id'); 
             $table->unsignedBigInteger('user_id'); 
-            $table->longText('content');  // LONGTEXT equivalent to the table
+            $table->longText('content');
             $table->softDeletes();
             $table->timestamps();
         });

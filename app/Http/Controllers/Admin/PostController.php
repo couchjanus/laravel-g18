@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\{Post, Category, Tag};
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Image;
 
 class PostController extends Controller
 {
@@ -39,10 +42,34 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = Post::create(['title'=>$request->title, 'content'=>$request->content, 'category_id'=>$request->category_id, 'user_id'=>1]);
+        $post = Post::create([
+            'title'=>$request->title, 
+            'content'=>$request->content, 
+            'category_id'=>$request->category_id, 
+            'user_id'=>1,
+            'cover_path' => $this->uploadCover($request->file("cover")),
+            // 'cover_path' => $this->uploadImage($request->file("cover")),
+        ]);
         $post->tags()->sync($request->input('tags', []));
 
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.posts.index')->withSuccess('Post Created Successfully');
+    }
+
+    private function uploadCover(UploadedFile $file) : string
+    {
+        $filename = time() . "." . $file->getClientOriginalExtension();
+        $file->storeAs("public/covers", $filename);
+        return asset("storage/covers/". $filename);
+    }
+
+    public function uploadImage(UploadedFile $file) : string
+    {
+        $filename = time() . "." . $file->getClientOriginalExtension();
+        $img = Image::make($file);
+        $img->resize(520, 250, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save(storage_path('app/public/covers')."/".$filename);
+        return asset("storage/covers/". $filename);
     }
 
     /**
@@ -79,14 +106,24 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $post->update([
+        $data = [
             'title'=>$request->title,
             'content'=>$request->content,
             'category_id'=>$request->category_id,
             'published'=>($request->published =='on')?1:0,
-            ]);
+        ];
+
+        if($request->file("cover")) {
+            Storage::delete("public/covers/" . $post->cover);
+            $data += ["cover_path" => $this->uploadImage($request->file("cover"))]; 
+        } else {
+            $data += ["cover_path" => $post->cover_path]; 
+        }
+
+        $post->update($data);
+
         $post->tags()->sync($request->input('tags', []));
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.posts.index')->with('message','Post has been updated successfully');
     }
 
     /**
@@ -98,8 +135,9 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->tags()->detach();
+        Storage::delete("public/covers/{$post->cover}");
         $post->delete();
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.posts.index')->with('success','Post deleted successfully');
     }
 
     // trashed
