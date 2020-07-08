@@ -12,8 +12,23 @@
         <h5 class="widgetheading">Categories</h5>
           <ul class="cat">
             @foreach ($categories as $category)
-                <li><i class="icon-angle-right"></i> <a href="/blog/category/{{ $category->id }}">{{ $category->name }}</a></li>
+                <li><i class="fa fa-angle-right"></i> <a href="{{ route('blog.by.category', $category->id) }}">{{ $category->name }}</a></li>
             @endforeach
           </ul>
     </div>
+
+    <div class="widget">
+        <h5 class="widgetheading">Recents posts</h5>
+          <ul class="cat">
+            @foreach ($recents as $item)
+                <li>@fa('fa-angle-right') <a href="{{ route('blog.show', $item->slug) }}">{{ $item->title }}</a></li>
+            @endforeach
+          </ul>
+    </div>
+    <div class="widget">
+        <h5 class="widgetheading">Tags cloud</h5>
+          <x-tag-cloud>
+          </x-tag-cloud>
+    </div>
+    
 </div>

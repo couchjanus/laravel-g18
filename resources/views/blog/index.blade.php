@@ -5,12 +5,12 @@
 @endsection
 
 @section('main')
+  <div class="row">
     <ul class="breadcrumb">
         <li>{{ Breadcrumbs::render('blog') }} <i class="icon-angle-right"></i></li>
     </ul>
     <hr>
 
-    <h1>{{ $title ?? 'Posts List' }}</h1>
     @forelse($posts as $post)
         <article>
           <div class="row">
@@ -44,4 +44,6 @@
     @empty
       <p>No posts yet...</p>
     @endforelse
+    {{ $posts->links() }}
+  </div>
 @endsection

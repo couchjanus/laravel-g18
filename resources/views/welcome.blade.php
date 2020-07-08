@@ -10,8 +10,17 @@
                     Laravel
                 </div>
                 <hr>
-                
+                @double(169995) // Если цена равна, например, 169995
+                <i class="fa fa-bars" aria-hidden="true"></i>
+                @fa('fa-bars')
 
+                <x-modal type="error" class="mb-4">
+                    
+                </x-modal>
+
+                <x-tag-cloud>
+                    
+                </x-tag-cloud>
             </div>
             
 @endsection

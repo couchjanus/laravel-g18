@@ -39,7 +39,7 @@ Route::get('about', 'AboutController@index')->name('about');
 
 Route::group(['as' => 'blog.', 'prefix' => 'blog'], function () {
     Route::get('', 'BlogController@index')->name('index');
-    Route::get('category/{id}', 'BlogController@getByCategory');
+    Route::get('category/{id}', 'BlogController@getByCategory')->name('by.category');
     Route::get('author/{id}', 'BlogController@getByAuthor');
     Route::get('show/{slug}', 'BlogController@show')->name('show');
 });

@@ -15,9 +15,8 @@ class BlogController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()   {
-        $posts = Post::where('published', 1)->with('user')->with('category')->simplePaginate(7);
-        $categories = DB::table('categories')->take(30)->get();
-        return view('blog.index', compact('posts', 'categories'));
+        $posts = Post::where('published', 1)->with('user')->with('category')->simplePaginate(5);
+        return view('blog.index', compact('posts'));
     }
      
     public function show($slug)
@@ -29,7 +28,7 @@ class BlogController extends Controller
 
         $post = Post::whereSlug($slug)->with('user')->with('category')->firstOrFail();
         $hasComments = false;
-        $categories = DB::table('categories')->get();
+        // $categories = DB::table('categories')->get();
 
         $Key = 'blog' . $post->id;
         if (!\Session::has($Key)) {
@@ -37,7 +36,7 @@ class BlogController extends Controller
             \Session::put($Key, 1);
         }
         
-        return view('blog.show',compact('post', 'categories', 'hasComments'));
+        return view('blog.show',compact('post', 'hasComments'));
     }
 
     public function getByCategory($id)
@@ -49,8 +48,8 @@ class BlogController extends Controller
               ->with('category')
               ->orderBy('created_at', 'desc')
               ->simplePaginate(7);
-        $categories = DB::table('categories')->take(30)->get();
-        return view('blog.index', compact('posts', 'categories'));
+        // $categories = DB::table('categories')->take(30)->get();
+        return view('blog.index', compact('posts'));
     }
 
     public function getByAuthor($id)
@@ -62,7 +61,7 @@ class BlogController extends Controller
         ->where('user_id', '=', $id)
         ->orderBy('created_at', 'desc')
         ->get();
-        $categories = DB::table('categories')->take(30)->get();
-        return view('blog.index', compact('posts', 'categories'));
+        // $categories = DB::table('categories')->take(30)->get();
+        return view('blog.index', compact('posts'));
     }
 }
