@@ -19,6 +19,17 @@
             <li>On <a href="#" class="date">{{  \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</a></li>
             <li>Category: <a href="/blog/category/{{ $post->category->id }}">{{ $post->category->name }}</a></li>
             <li>Views: <a href="#" class="votes"> {{ $post->votes }}</a></li>
+            <li>
+            <span class="panel" data-id="{{ $post->id }}">
+
+                <span class="like-btn thumbs-up {{ auth()->user()->hasLiked($post) ? 'like-post' : '' }}">@fa('fa-thumbs-up')</span>
+
+                <span id="like{{$post->id}}-count">{{ $post->likers()->get()->count() ?? 0 }}</span>
+                
+                <span class="like-btn thumbs-down {{ auth()->user()->hasLiked($post) ? 'like-post' : '' }}">@fa('fa-thumbs-down')</span>
+            </span>
+            </li>
+            
         </ul>
     </div>
     <div class="post-entry">
@@ -39,47 +50,69 @@
 </div>
 
 <div class="comment-area">
-    <h4>4 Comments</h4>
-    <div class="media">
-        <a href="#" class="pull-left"><img src="/images/blog/avatar.png" alt="" class="img-circle" /></a>
-        <div class="media-body">
-            <div class="media-content">
-                <h6><span>March 12, 2020</span> Michael Simpson</h6>
-                <p>
-                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.
-                    Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi
-                    vulputate fringilla. Donec lacinia congue felis in faucibus.
-                </p>
-
-                <a href="#" class="align-right">Reply</a>
-            </div>
-        </div>
-    </div>
+    <h4>{{ count($post->comments) ?? 0 }} Comments</h4>
+    @include('blog.partials._comment_replies', ['comments' => $post->comments, 'post_id' => $post->id])
 
     <div class="mb-30"></div>
+    @auth
     <h4>Leave your comment</h4>
-
-    <form id="commentform" action="#" method="post" name="comment-form">
-        <div class="row">
-            <div class="col-md-4">
-                <input type="text" placeholder="* Enter your full name" />
-            </div>
-            <div class="col-md-4">
-                <input type="text" placeholder="* Enter your email address" />
-            </div>
-            <div class="col-md-8 mt-10">
-                <input type="text" placeholder="Enter your website" />
-            </div>
-            <div class="col-md-8 mt-10">
-                <p>
-                    <textarea class="input-block-level" placeholder="*Your comment here"></textarea>
-                </p>
-                <p>
-                    <button class="btn btn-theme btn-medium margintop10" type="submit">Submit comment</button>
-                </p>
-            </div>
+    <form method="post" action="{{ route('comment.add') }}">
+        @csrf
+        <div class="form-group">
+            <input type="text" name="body" class="form-control">
+            <input type="hidden" name="post_id" value="{{ $post->id }}">
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-warning" value="Add Comment">
         </div>
     </form>
+    @endauth
 </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('span.thumbs-up i').click(function(){
+            var btn = $(this);
+            var id = $(this).parents('.panel').data('id');
+            var countUp = $('#like'+id+'-count').text()? $('#like'+id+'-count').text():0;
+            $.ajax({
+                url: "/blog/like",
+                type:"POST",
+                data:{
+                    id:id,
+                },
+                success:function(response){
+                    $('#like'+id+'-count').text(parseInt(countUp)+1);
+                    $(btn).addClass("like-post");
+                },
+            });
+        });
+        $('span.thumbs-down i').click(function(){
+            var btn = $(this);
+            var id = $(this).parents('.panel').data('id');
+            var countDown = $('#like'+id+'-count').text()? $('#like'+id+'-count').text():0;
+            $.ajax({
+                url: "/blog/like",
+                type:"POST",
+                data:{
+                    id:id,
+                },
+                success:function(response){
+                    $('#like'+id+'-count').text(parseInt(countDown)-1);
+                    $(btn).removeClass("like-post");
+                },
+            });
+        });
+    }); 
+</script>
+@endpush

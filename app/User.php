@@ -9,10 +9,12 @@ use Carbon\Carbon;
 use Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \DateTimeInterface;
+use Overtrue\LaravelLike\Traits\Liker;
 
 class User extends Authenticatable //  implements MustVerifyEmail
 {
     use Notifiable, SoftDeletes;
+    use Liker;
 
     /**
      * The attributes that are mass assignable.

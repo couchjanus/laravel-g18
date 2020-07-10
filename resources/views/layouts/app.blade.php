@@ -26,4 +26,5 @@
 @section('allscripts')
     <!-- Include Scripts -->
     @include('layouts.partials.shared._scripts')
+    @stack('scripts')
 @endsection

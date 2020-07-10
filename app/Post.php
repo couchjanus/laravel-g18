@@ -6,10 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentSluggable\Sluggable;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use App\Comment;
+use Overtrue\LaravelLike\Traits\Likeable;
+
 class Post extends Model
 {
     use SoftDeletes;
     use Sluggable;
+    use Likeable;
 
     protected $fillable = [
         'title', 'content', 'category_id', 'user_id', 'published', 'cover_path'
@@ -57,4 +62,10 @@ class Post extends Model
 
         return end($parts);
     }
+    
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable')->with('creator')->whereNull('parent_id');
+    }
+
 }

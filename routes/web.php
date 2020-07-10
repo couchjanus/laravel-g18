@@ -42,6 +42,7 @@ Route::group(['as' => 'blog.', 'prefix' => 'blog'], function () {
     Route::get('category/{id}', 'BlogController@getByCategory')->name('by.category');
     Route::get('author/{id}', 'BlogController@getByAuthor');
     Route::get('show/{slug}', 'BlogController@show')->name('show');
+    Route::post('like', 'BlogController@LikePost')->name('like');
 });
 
 Route::middleware('auth')
@@ -71,6 +72,9 @@ Route::post('invitations', 'InvitationController@store')->middleware('guest')->n
 
 Route::get('social/{provider}', 'Auth\SocialController@redirect')->name('social.redirect');
 Route::get('social/{provider}/callback', 'Auth\SocialController@callback')->name('social.callback');
+
+Route::post('/comment/store', 'CommentController@store')->name('comment.add');
+Route::post('/reply/store', 'CommentController@replyStore')->name('reply.add');
 
 // 
 Route::fallback(function() {

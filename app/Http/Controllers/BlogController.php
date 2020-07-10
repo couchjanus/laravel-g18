@@ -28,7 +28,6 @@ class BlogController extends Controller
 
         $post = Post::whereSlug($slug)->with('user')->with('category')->firstOrFail();
         $hasComments = false;
-        // $categories = DB::table('categories')->get();
 
         $Key = 'blog' . $post->id;
         if (!\Session::has($Key)) {
@@ -61,7 +60,12 @@ class BlogController extends Controller
         ->where('user_id', '=', $id)
         ->orderBy('created_at', 'desc')
         ->get();
-        // $categories = DB::table('categories')->take(30)->get();
         return view('blog.index', compact('posts'));
+    }
+
+    public function LikePost(Request $request){
+        $post = Post::find($request->id);
+        $response = auth()->user()->toggleLike($post);
+        return response()->json(['success'=>$response]);
     }
 }
