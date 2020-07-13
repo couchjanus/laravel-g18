@@ -40,6 +40,24 @@
                 @endif
                 <span class="help-block">{{ __('user password field') }}</span>
             </div>
+            <div class="form-group">
+                <label class="required" for="roles">{{ __('roles') }}</label>
+                <div style="padding-bottom: 4px">
+                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ __('Select all') }}</span>
+                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ __('Deselect all') }}</span>
+                </div>
+                <select class="form-control select2 {{ $errors->has('roles') ? 'is-invalid' : '' }}" name="roles[]" id="roles" multiple required>
+                    @foreach($roles as $id => $roles)
+                        <option value="{{ $id }}" {{ (in_array($id, old('roles', [])) || $user->roles->contains($id)) ? 'selected' : '' }}>{{ $roles }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('roles'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('roles') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ __('user shoul have roles') }}</span>
+            </div>
             
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">
@@ -53,3 +71,24 @@
 
 
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/select2.min.js') }}"></script>
+<script>
+$(document).ready(function () {
+    $('.select2').select2();
+    $('.select-all').click(function () {
+        let $select2 = $(this).parent().siblings('.select2')
+        $select2.find('option').prop('selected', 'selected')
+        $select2.trigger('change')
+    })
+    $('.deselect-all').click(function () {
+        let $select2 = $(this).parent().siblings('.select2')
+        $select2.find('option').prop('selected', '')
+        $select2.trigger('change')
+    })
+})
+
+</script>
+
+@endpush

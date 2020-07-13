@@ -65,9 +65,11 @@
                             <a class="btn btn-xs btn-info" href="{{ route('admin.posts.edit', $post->id) }}">
                                 {{ __('edit') }}
                             </a>
+                            @can('post_delete', $post)
                             <form action="{{ route('admin.posts.destroy',  $post->id) }}" method="post" style="display: inline-block;">@method('DELETE') @csrf
                                 <button title="Delete post" type="submit" class="btn btn-xs btn-danger">{{ __('delete') }}</button>
-                            </form>  
+                            </form> 
+                            @endcan 
                         </td>
 
                     </tr>

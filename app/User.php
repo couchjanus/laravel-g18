@@ -81,5 +81,19 @@ class User extends Authenticatable //  implements MustVerifyEmail
     public function accounts(){
         return $this->hasMany(Social::class);
     }
-    
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function getIsAdminAttribute()
+    {
+        return $this->roles()->where('title', 'Admin')->exists();
+    }
+    public function getIsEditorAttribute()
+    {
+        return $this->roles()->where('title', 'Editor')->exists();
+    }
+
 }

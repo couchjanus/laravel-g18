@@ -17,10 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('main');
 
-Route::namespace('Admin')
-    ->prefix('admin')
-    ->as('admin.')
-	->group(function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function () {
         Route::get('/', 'DashboardController')->name('home');
         Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
         Route::resource('users', 'UserController');
@@ -33,6 +30,8 @@ Route::namespace('Admin')
         Route::get('invitations', 'InvitationController@index')->name('showInvitations');
         Route::post('invite/{id}', 'InvitationController@sendInvite')
         ->name('send.invite');
+        Route::resource('permissions', 'PermissionController');
+        Route::resource('roles', 'RoleController');
 });
 
 Route::get('about', 'AboutController@index')->name('about');

@@ -33,6 +33,7 @@
                     {{ __('Posts') }}
                 </a>
             </li>
+            @can('user_access')
             <li class="nav-item nav-dropdown">
                 <a class="nav-link  nav-dropdown-toggle" href="#">
                     <i class="fa-fw fas fa-users nav-icon">
@@ -42,7 +43,7 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <a href="" class="nav-link">
+                        <a href="{{ route('admin.permissions.index') }}" class="nav-link">
                             <i class="fa-fw fas fa-unlock-alt nav-icon">
 
                             </i>
@@ -50,7 +51,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="" class="nav-link">
+                        <a href="{{ route('admin.roles.index') }}" class="nav-link">
                             <i class="fa-fw fas fa-briefcase nav-icon">
 
                             </i>
@@ -67,6 +68,7 @@
                     </li>
                 </ul>
             </li>
+            @endcan
             <li class="nav-item">
                 
             </li>

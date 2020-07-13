@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\{User, Profile};
+use App\{User, Profile, Role};
 use Illuminate\Http\Request;
 use App\Http\Requests\{StoreUserRequest, UpdateUserRequest};
+use Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -16,6 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $users = User::paginate(7);
 
         return view('admin.users.index', compact('users'));
@@ -28,7 +31,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        abort_if(Gate::denies('user_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $roles = Role::all()->pluck('title', 'id');
+
+        return view('admin.users.create', compact('roles'));
     }
 
     /**
@@ -40,8 +47,10 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $user = User::create($request->all());
+        $user->roles()->sync($request->input('roles', []));
         $profile = new Profile();
         $user->profile()->save($profile);
+
         return redirect()->route('admin.users.index')->withSuccess('User created successfully');
     }
 
@@ -53,6 +62,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        abort_if(Gate::denies('user_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $user->load('roles');
         return view('admin.users.show', compact('user'));
     }
 
@@ -64,7 +76,12 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $roles = Role::all()->pluck('title', 'id');
+
+        $user->load('roles');
+        return view('admin.users.edit', compact('roles', 'user'));
     }
 
     /**
@@ -77,6 +94,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $user->update($request->all());
+        $user->roles()->sync($request->input('roles', []));
         if (!$user->profile) {
             $profile = new Profile();
             $user->profile()->save($profile);
@@ -92,6 +110,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $user->delete();
         return back()->withSuccess('User deleted successfully');
     }

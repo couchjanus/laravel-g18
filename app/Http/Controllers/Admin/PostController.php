@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Image;
+use Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
@@ -18,6 +20,7 @@ class PostController extends Controller
      */
     public function index()
     {
+        abort_if(Gate::denies('post_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $posts = Post::latest()->paginate(5);
         return view('admin.posts.index', compact('posts'));
     }
@@ -29,6 +32,8 @@ class PostController extends Controller
      */
     public function create()
     {
+        abort_if(Gate::denies('post_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $categories = Category::all()->pluck('name', 'id');
         $tags = Tag::all()->pluck('name', 'id');
         return view('admin.posts.create', compact('categories', 'tags'));
@@ -91,6 +96,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        abort_if(Gate::denies('post_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $categories = Category::all()->pluck('name', 'id');
         $post->load('tags');
         $tags = Tag::all()->pluck('name', 'id');
@@ -134,6 +141,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        abort_if(Gate::denies('post_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $post->tags()->detach();
         Storage::delete("public/covers/{$post->cover}");
         $post->delete();
