@@ -4,7 +4,7 @@ namespace App\Http\ViewComposers;
 use App\Post;
 use Illuminate\Contracts\View\View;
 
-class RecentPostsComposer
+class FavoritePostsComposer
 {
   private $posts;
 
@@ -13,7 +13,7 @@ class RecentPostsComposer
   }
 
     public function compose(View $view) {
-        return $view->with('recents', $this->posts->latest()->take(4)->get());
+        return $view->with('favorites', $this->posts->orderBy('votes', 'desc')->take(4)->get());
     }
 
 }

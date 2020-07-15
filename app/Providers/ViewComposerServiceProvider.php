@@ -29,7 +29,12 @@ class ViewComposerServiceProvider extends ServiceProvider
         $view->with('categories', Category::orderBy('name', 'asc')->get());
         });
         // Можно вместо фасада представления использовать функцию-хелпер view():
-        view()->composer('blog.partials._sidebar', \App\Http\ViewComposers\RecentPostsComposer::class);
+        view()->composer(['blog.partials._sidebar', 'welcome'], \App\Http\ViewComposers\RecentPostsComposer::class);
+        
+        view()->composer('welcome', \App\Http\ViewComposers\FavoritePostsComposer::class);
+        
+        view()->composer('welcome', \App\Http\ViewComposers\FavoriteCategoriesComposer::class);
+        
     }
 }
 

@@ -15,7 +15,7 @@ class BlogController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()   {
-        $posts = Post::where('published', 1)->with('user')->with('category')->simplePaginate(5);
+        $posts = Post::where('published', 1)->latest()->with('user')->with('category')->simplePaginate(5);
         return view('blog.index', compact('posts'));
     }
      

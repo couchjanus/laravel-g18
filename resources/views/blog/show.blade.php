@@ -19,6 +19,7 @@
             <li>On <a href="#" class="date">{{  \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</a></li>
             <li>Category: <a href="/blog/category/{{ $post->category->id }}">{{ $post->category->name }}</a></li>
             <li>Views: <a href="#" class="votes"> {{ $post->votes }}</a></li>
+            @auth
             <li>
             <span class="panel" data-id="{{ $post->id }}">
 
@@ -29,7 +30,7 @@
                 <span class="like-btn thumbs-down {{ auth()->user()->hasLiked($post) ? 'like-post' : '' }}">@fa('fa-thumbs-down')</span>
             </span>
             </li>
-            
+            @endauth
         </ul>
     </div>
     <div class="post-entry">

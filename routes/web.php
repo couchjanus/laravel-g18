@@ -75,6 +75,9 @@ Route::get('social/{provider}/callback', 'Auth\SocialController@callback')->name
 Route::post('/comment/store', 'CommentController@store')->name('comment.add');
 Route::post('/reply/store', 'CommentController@replyStore')->name('reply.add');
 
+Route::get('search', 'SearchController@index')->name('search.index');
+Route::get('search-results', 'SearchController@search')->name('search.result');
+
 // 
 Route::fallback(function() {
     return "Oops… How you've trapped here?";
